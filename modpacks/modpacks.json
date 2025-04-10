@@ -1,0 +1,21 @@
+[
+    {
+        "id": "1",
+        "name": "Test",
+        "version": "1",
+        "mc_versions": [
+            "1.21.5"
+        ],
+        "author": "Ben Foggon",
+        "description": "Test",
+        "modloader": "fabric",
+        "created_at": "2025-04-10T16:27:57.138949",
+        "updated_at": "2025-04-10T16:28:47.128152",
+        "download_count": 0,
+        "mod_count": 0,
+        "download_url": "/api/modpacks/1/download",
+        "file_size": 1607233,
+        "file_hash": "bfd881be11cdb297eb8a6655853b9eab731c166cb05c0e95ec6c83ec62150f25",
+        "icon_url": "/api/modpacks/1/icon"
+    }
+]

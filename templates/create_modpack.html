@@ -1,0 +1,623 @@
+<!-- modpack.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Modpack - Project Launcher</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #1A1C23;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1, h2 {
+            color: #E61B72;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .section {
+            background-color: #2B3142;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .search-box {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px 0 0 6px;
+            background-color: #232734;
+            color: white;
+        }
+        .search-btn {
+            background-color: #E61B72;
+            color: white;
+            border: none;
+            border-radius: 0 6px 6px 0;
+            padding: 0 20px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .refresh-btn {
+            background-color: #616A94;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        .refresh-btn:hover {
+            background-color: #7680AB;
+        }
+        .search-info {
+            margin-bottom: 15px;
+            color: #8D93A0;
+            text-align: center;
+        }
+        .search-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .search-tag {
+            background-color: #3B4358;
+            color: #BFC1C7;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .search-tag:hover {
+            background-color: #4D5570;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            background-color: #232734;
+            color: white;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        .button {
+            background-color: #E61B72;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 20px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #F32A81;
+        }
+        .button-secondary {
+            background-color: #616A94;
+        }
+        .button-secondary:hover {
+            background-color: #7680AB;
+        }
+        .search-results {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        .mod-item {
+            background-color: #232734;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .mod-icon {
+            width: 48px;
+            height: 48px;
+            margin-right: 15px;
+            border-radius: 6px;
+            object-fit: cover;
+            background-color: #1A1C23;
+        }
+        .mod-info {
+            flex: 1;
+        }
+        .mod-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .mod-meta {
+            color: #8D93A0;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .mod-description {
+            font-size: 14px;
+            color: #BFC1C7;
+        }
+        .mod-actions {
+            display: flex;
+            align-items: center;
+        }
+        .add-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .add-btn:hover {
+            background-color: #5CBF60;
+        }
+        .selected-mods {
+            margin-top: 20px;
+        }
+        .selected-mod {
+            background-color: #232734;
+            border-radius: 6px;
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .remove-btn {
+            background-color: #E74C3C;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .back-link {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .back-link a {
+            color: #8D93A0;
+            text-decoration: none;
+        }
+        .back-link a:hover {
+            color: white;
+        }
+        .modrinth-credit {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #8D93A0;
+        }
+        .modrinth-logo {
+            height: 20px;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+    </style>
+    <script>
+        // Global variables
+        let searchInput, searchButton, refreshButton, searchResults, selectedModsContainer, 
+            noModsMessage, createButton, cancelButton;
+        let selectedMods = [];
+
+        // Define all functions before using them
+        function loadPopularMods() {
+            const mcVersion = document.getElementById('modpack-mc-version').value;
+            const modLoader = document.getElementById('modpack-modloader').value;
+            console.log(`Loading popular mods for MC version: ${mcVersion}, Loader: ${modLoader}`);
+            searchResults.innerHTML = '<p>Loading popular mods...</p>';
+            
+            fetch(`/api/mods/popular?mc_version=${mcVersion}&modloader=${modLoader}`)
+                .then(response => {
+                    console.log("Popular mods response status:", response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Got popular mods data, count:", data.length);
+                    if (data.length === 0) {
+                        searchResults.innerHTML = '<p>No popular mods found for this modloader.</p>';
+                        return;
+                    }
+                    
+                    displaySearchResults(data);
+                })
+                .catch(error => {
+                    console.error('Error loading popular mods:', error);
+                    searchResults.innerHTML = `<p>Error loading popular mods: ${error.message}</p>`;
+                });
+        }
+
+        function displaySearchResults(data) {
+            searchResults.innerHTML = '';
+            console.log("Displaying", data.length, "mods");
+            
+            data.forEach(mod => {
+                const modElement = document.createElement('div');
+                modElement.className = 'mod-item';
+                
+                modElement.innerHTML = `
+                    <img class="mod-icon" src="${mod.icon_url || '/static/default-icon.png'}" 
+                        onerror="this.src='/static/default-icon.png'">
+                    <div class="mod-info">
+                        <div class="mod-name">${mod.name}</div>
+                        <div class="mod-meta">by ${mod.author} • ${numberWithCommas(mod.downloads)} downloads</div>
+                        <div class="mod-description">${mod.description}</div>
+                    </div>
+                    <div class="mod-actions">
+                        <a href="${mod.page_url}" target="_blank" class="button button-secondary">Details</a>
+                        <button class="add-btn">Add</button>
+                    </div>
+                `;
+                
+                // Add event listener to the Add button
+                const addButton = modElement.querySelector('.add-btn');
+                addButton.addEventListener('click', function() {
+                    addMod(mod);
+                });
+                
+                searchResults.appendChild(modElement);
+            });
+        }
+
+        function searchMods() {
+            const query = searchInput.value.trim();
+            if (!query) {
+                loadPopularMods(); // Fall back to popular mods if search is empty
+                return;
+            }
+            
+            const mcVersion = document.getElementById('modpack-mc-version').value;
+            const modLoader = document.getElementById('modpack-modloader').value;
+            
+            searchResults.innerHTML = '<p>Searching...</p>';
+            
+            fetch(`/api/mods/search?query=${encodeURIComponent(query)}&mc_version=${mcVersion}&modloader=${modLoader}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length === 0) {
+                        searchResults.innerHTML = '<p>No results found.</p>';
+                        return;
+                    }
+                    
+                    displaySearchResults(data);
+                })
+                .catch(error => {
+                    console.error('Error searching mods:', error);
+                    searchResults.innerHTML = '<p>Error searching mods. Please try again.</p>';
+                });
+        }
+
+        function addMod(mod) {
+            // Check if mod is already added
+            if (selectedMods.some(m => m.id === mod.id)) {
+                alert('This mod is already in your list!');
+                return;
+            }
+            
+            selectedMods.push(mod);
+            updateSelectedModsDisplay();
+        }
+
+        function removeMod(index) {
+            selectedMods.splice(index, 1);
+            updateSelectedModsDisplay();
+        }
+
+        function updateSelectedModsDisplay() {
+            if (selectedMods.length === 0) {
+                noModsMessage.style.display = 'block';
+                return;
+            }
+            
+            noModsMessage.style.display = 'none';
+            selectedModsContainer.innerHTML = '';
+            
+            selectedMods.forEach((mod, index) => {
+                const modElement = document.createElement('div');
+                modElement.className = 'selected-mod';
+                
+                modElement.innerHTML = `
+                    <div class="selected-mod-name">${mod.name}</div>
+                    <button class="remove-btn" data-index="${index}">Remove</button>
+                `;
+                
+                // Add event listener to remove button
+                const removeButton = modElement.querySelector('.remove-btn');
+                removeButton.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    removeMod(index);
+                });
+                
+                selectedModsContainer.appendChild(modElement);
+            });
+            
+            // Re-add the no-mods message at the end
+            selectedModsContainer.appendChild(noModsMessage);
+        }
+
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function createModpack() {
+            console.log("Create modpack clicked");
+            
+            // Get form values
+            const id = document.getElementById('modpack-id').value.trim();
+            const name = document.getElementById('modpack-name').value.trim();
+            const version = document.getElementById('modpack-version').value.trim();
+            const author = document.getElementById('modpack-author').value.trim();
+            const mcVersion = document.getElementById('modpack-mc-version').value;
+            const modLoader = document.getElementById('modpack-modloader').value;
+            const description = document.getElementById('modpack-description').value.trim();
+            const logoFile = document.getElementById('modpack-logo').files[0];
+            
+            // Basic validation
+            if (!id || !name || !version || !author || !description) {
+                alert("Please fill in all required fields");
+                return;
+            }
+            
+            // Check if mods are selected
+            if (selectedMods.length === 0) {
+                alert("Please select at least one mod for your modpack");
+                return;
+            }
+            
+            // Create FormData object for multipart/form-data submission (for file upload)
+            const formData = new FormData();
+            formData.append('data', JSON.stringify({
+                id: id,
+                name: name,
+                version: version,
+                author: author,
+                mc_versions: [mcVersion],
+                modloader: modLoader,
+                description: description,
+                mods: selectedMods
+            }));
+            
+            // Add logo if selected
+            if (logoFile) {
+                formData.append('logo', logoFile);
+            }
+            
+            console.log("Creating modpack with ID:", id);
+            
+            // Submit to server
+            fetch('/api/modpacks/create', {
+                method: 'POST',
+                headers: {
+                    // Only include auth header, not Content-Type - browser sets it with boundary for multipart/form-data
+                    'Authorization': 'Basic ' + btoa('admin:admin')
+                },
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to create modpack');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert("Modpack created successfully!");
+                window.location.href = '/admin';
+            })
+            .catch(error => {
+                console.error('Error creating modpack:', error);
+                alert(`Error creating modpack: ${error.message}`);
+            });
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM loaded, initializing interface");
+            
+            // Initialize DOM elements
+            searchInput = document.getElementById('search-input');
+            searchButton = document.getElementById('search-button');
+            refreshButton = document.getElementById('refresh-button');
+            searchResults = document.getElementById('search-results');
+            selectedModsContainer = document.getElementById('selected-mods');
+            noModsMessage = document.getElementById('no-mods-message');
+            createButton = document.getElementById('create-button');
+            cancelButton = document.getElementById('cancel-button');
+            
+            console.log("DOM elements initialized:", {
+                searchInput, searchButton, refreshButton, searchResults
+            });
+            
+            // Set up event listeners
+            searchButton.addEventListener('click', searchMods);
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchMods();
+                }
+            });
+            refreshButton.addEventListener('click', loadPopularMods);
+            createButton.addEventListener('click', createModpack);
+            cancelButton.addEventListener('click', () => window.location.href = '/admin');
+            
+            document.getElementById('modpack-mc-version').addEventListener('change', loadPopularMods);
+            document.getElementById('modpack-modloader').addEventListener('change', loadPopularMods);
+
+            const logoInput = document.getElementById('modpack-logo');
+            logoInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        // Show preview of the image
+                        const previewContainer = document.getElementById('logo-preview');
+                        if (!previewContainer) {
+                            const newPreview = document.createElement('div');
+                            newPreview.id = 'logo-preview';
+                            newPreview.style.marginTop = '10px';
+                            newPreview.style.textAlign = 'center';
+                            newPreview.innerHTML = `
+                                <img src="${e.target.result}" style="max-width: 128px; max-height: 128px; border-radius: 8px;">
+                                <div><button type="button" id="clear-logo" class="button button-secondary" style="margin-top: 5px;">Clear</button></div>
+                            `;
+                            logoInput.parentNode.appendChild(newPreview);
+                            
+                            // Add clear button functionality
+                            document.getElementById('clear-logo').addEventListener('click', function() {
+                                logoInput.value = '';
+                                document.getElementById('logo-preview').remove();
+                            });
+                        } else {
+                            previewContainer.querySelector('img').src = e.target.result;
+                        }
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Test API
+            console.log("Testing API connectivity...");
+            fetch('/api/debug/search')
+                .then(response => response.json())
+                .then(data => {
+                    console.log("API test successful:", data);
+                    if (data.results && data.results.length > 0) {
+                        console.log(`Found ${data.count} mods, first mod: ${data.results[0].name}`);
+                    }
+                    
+                    // Only after we know the API works, load popular mods
+                    console.log("Loading popular mods...");
+                    loadPopularMods();
+                })
+                .catch(error => {
+                    console.error("API test failed:", error);
+                    searchResults.innerHTML = '<p>API test failed. Please check the server logs.</p>';
+                });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Create Modpack</h1>
+        <div class="section">
+            <div class="form-group">
+                <label for="modpack-id">Modpack ID</label>
+                <input type="text" id="modpack-id" placeholder="Enter modpack ID">
+            </div>
+            <div class="form-group">
+                <label for="modpack-name">Modpack Name</label>
+                <input type="text" id="modpack-name" placeholder="Enter modpack name">
+            </div>
+            <div class="form-group">
+                <label for="modpack-version">Modpack Version</label>
+                <input type="text" id="modpack-version" placeholder="Enter modpack version">
+            </div>
+            <div class="form-group">
+                <label for="modpack-author">Author</label>
+                <input type="text" id="modpack-author" placeholder="Enter author name">
+            </div>
+            <div class="form-group">
+                <label for="modpack-logo">Modpack Logo (Optional)</label>
+                <input type="file" id="modpack-logo" accept="image/png,image/jpeg,image/gif">
+                <!-- Logo preview will be inserted here -->
+            </div>
+            <div class="form-group">
+                <label for="modpack-mc-version">Minecraft Version</label>
+                <select id="modpack-mc-version">
+                    <option value="1.21.5">1.21.5</option>
+                    <option value="1.20.6">1.20.6</option>
+                    <option value="1.19.4">1.19.4</option>
+                    <option value="1.18.2">1.18.2</option>
+                    <option value="1.17.1">1.17.1</option>
+                    <option value="1.16.5">1.16.5</option>
+                    <option value="1.15.2">1.15.2</option>
+                    <option value="1.14.2">1.14.2</option>
+                    <option value="1.13.2">1.13.2</option>
+                    <option value="1.12.2">1.12.2</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="modpack-modloader">Mod Loader</label>
+                <select id="modpack-modloader">
+                    <option value="fabric">Fabric</option>
+                    <option value="forge">Forge</option>
+                    <option value="quilt">Quilt</option>
+                    <option value="neoforge">NeoForge</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="modpack-description">Description</label>
+                <textarea id="modpack-description" placeholder="Enter modpack description"></textarea>
+            </div>
+        </div>
+        <div class="section">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Search for mods">
+                <button class="search-btn" id="search-button">Search</button>
+                <button class="refresh-btn" id="refresh-button" title="Refresh popular mods">↻</button>
+            </div>
+            <div class="search-info">
+                <p>Search for mods above or browse popular mods below.</p>
+                <div class="search-tags">
+                    <span class="search-tag" onclick="document.getElementById('search-input').value='fabric'; searchMods();">fabric</span>
+                    <span class="search-tag" onclick="document.getElementById('search-input').value='forge'; searchMods();">forge</span>
+                    <span class="search-tag" onclick="document.getElementById('search-input').value='optimization'; searchMods();">optimization</span>
+                    <span class="search-tag" onclick="document.getElementById('search-input').value='performance'; searchMods();">performance</span>
+                    <span class="search-tag" onclick="document.getElementById('search-input').value='jei'; searchMods();">jei</span>
+                </div>
+            </div>
+            <div id="search-results" class="search-results"></div>
+        </div>
+        <div class="section">
+            <h2>Selected Mods</h2>
+            <div id="selected-mods" class="selected-mods">
+                <p id="no-mods-message">No mods selected.</p>
+            </div>
+        </div>
+        <div class="section">
+            <button class="button" id="create-button">Create Modpack</button>
+            <button class="button button-secondary" id="cancel-button">Cancel</button>
+        </div>
+        <div class="back-link">
+            <a href="/admin">Back to Admin Panel</a>
+        </div>
+        <div class="modrinth-credit">
+            <img src="/static/modrinth-logo.png" alt="Modrinth Logo" class="modrinth-logo">
+            Powered by Modrinth API
+        </div>
+    </div>
+</body>
+</html>

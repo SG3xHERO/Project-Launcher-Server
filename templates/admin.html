@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Launcher Admin Panel</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #1A1C23;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1, h2 {
+            color: #E61B72;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .upload-section {
+            background-color: #2B3142;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .upload-section h2 {
+            margin-top: 0;
+        }
+        .modpack-list {
+            margin-top: 20px;
+        }
+        .modpack-item {
+            background-color: #2B3142;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .modpack-icon {
+            width: 48px;
+            height: 48px;
+            margin-right: 15px;
+            background-color: #232734;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .modpack-info {
+            flex: 1;
+        }
+        .modpack-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .modpack-meta {
+            color: #8D93A0;
+            font-size: 14px;
+        }
+        .button {
+            background-color: #E61B72;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 20px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #F32A81;
+        }
+        .delete-btn {
+            background-color: #E74C3C;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .delete-btn:hover {
+            background-color: #FF5252;
+        }
+        input[type="file"] {
+            background-color: #232734;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            font-size: 100px;
+            opacity: 0;
+            right: 0;
+            top: 0;
+            cursor: pointer;
+        }
+        .back-link {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .back-link a {
+            color: #8D93A0;
+            text-decoration: none;
+        }
+        .back-link a:hover {
+            color: white;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 20px 0;
+            color: #8D93A0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Modpack Admin Panel</h1>
+        
+        <div class="upload-section">
+            <h2>Upload Modpack</h2>
+            <form action="/api/modpacks" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" accept=".zip">
+                <button type="submit" class="button">Upload</button>
+            </form>
+            <div style="margin-top: 15px;">
+                <p>Or create a modpack by selecting mods directly:</p>
+                <a href="/admin/create-modpack" class="button">Create Modpack</a>
+            </div>
+        </div>
+        
+        <h2>Manage Modpacks</h2>
+        <div class="modpack-list">
+            {% if modpacks %}
+                {% for modpack in modpacks %}
+                    <div class="modpack-item">
+                        <img class="modpack-icon" src="/api/modpacks/{{ modpack.id }}/icon" alt="{{ modpack.name }}" onerror="this.src='/static/default-icon.png'">
+                        <div class="modpack-info">
+                            <div class="modpack-name">{{ modpack.name }}</div>
+                            <div class="modpack-meta">
+                                Version {{ modpack.version }} 
+                                &middot; 
+                                MC {{ modpack.mc_versions|join(', ') }} 
+                                &middot; 
+                                Downloads: {{ modpack.download_count }}
+                            </div>
+                        </div>
+                        <button class="delete-btn" onclick="deleteModpack('{{ modpack.id }}')">Delete</button>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <p>No modpacks available yet.</p>
+                    <p>Use the upload form above to add your first modpack!</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="back-link">
+            <a href="/">Back to Homepage</a>
+        </div>
+    </div>
+    
+    <script>
+        function deleteModpack(id) {
+            if (confirm('Are you sure you want to delete this modpack?')) {
+                // Get the current Authorization header from the page request
+                // This is a simple way to pass credentials from the current admin session
+                fetch('/api/modpacks/' + id, {
+                    method: 'DELETE',
+                    // Include the current Basic Auth credentials
+                    headers: {
+                        'Authorization': 'Basic ' + btoa('admin:admin') // Default credentials
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Failed to delete modpack');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the modpack');
+                });
+            }
+        }
+    </script>
+</body>
+</html>

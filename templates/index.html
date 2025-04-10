@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Launcher Repository</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #1A1C23;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #E61B72;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .modpack-list {
+            margin-top: 20px;
+        }
+        .modpack-item {
+            background-color: #2B3142;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .modpack-icon {
+            width: 64px;
+            height: 64px;
+            margin-right: 15px;
+            background-color: #232734;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .modpack-info {
+            flex: 1;
+        }
+        .modpack-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .modpack-meta {
+            color: #8D93A0;
+            font-size: 14px;
+        }
+        .modpack-description {
+            margin-top: 10px;
+            color: #BFC1C7;
+        }
+        .download-btn {
+            background-color: #E61B72;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 20px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .download-btn:hover {
+            background-color: #F32A81;
+        }
+        .admin-link {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .admin-link a {
+            color: #8D93A0;
+            text-decoration: none;
+        }
+        .admin-link a:hover {
+            color: white;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px 0;
+            color: #8D93A0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Project Launcher Repository</h1>
+        
+        <div class="modpack-list">
+            {% if modpacks %}
+                {% for modpack in modpacks %}
+                    <div class="modpack-item">
+                        <img class="modpack-icon" src="/api/modpacks/{{ modpack.id }}/icon" alt="{{ modpack.name }}" onerror="this.src='/static/default-icon.png'">
+                        <div class="modpack-info">
+                            <div class="modpack-name">{{ modpack.name }}</div>
+                            <div class="modpack-meta">
+                                Version {{ modpack.version }} 
+                                &middot; 
+                                MC {{ modpack.mc_versions|join(', ') }} 
+                                {% if modpack.mod_count %}
+                                &middot;
+                                {{ modpack.mod_count }} mods
+                                {% endif %}
+                            </div>
+                            <div class="modpack-description">{{ modpack.description }}</div>
+                        </div>
+                        <a href="/api/modpacks/{{ modpack.id }}/download" class="download-btn">Download</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <p>No modpacks available yet.</p>
+                    <p>Visit the admin panel to upload your first modpack!</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="admin-link">
+            <a href="/admin">Admin Panel</a>
+        </div>
+    </div>
+</body>
+</html>
