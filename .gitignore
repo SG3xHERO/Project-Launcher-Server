@@ -1,0 +1,40 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Virtual environment
+venv/
+.venv/
+env/
+.env/
+ENV/
+pythonenv*/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Project-specific cache and logs
+datacache/
+data/logs/
+data/temp/
+ms_token_cache.json
+
+# IDE specific files
+.idea/
+.vscode/
+
+# Environment configuration
+.env
+app/utils/__pycache__/__init__.cpython-311.pyc
+app/utils/__pycache__/minecraft_utils.cpython-311.pyc
+app/utils/__pycache__/__init__.cpython-311.pyc
+app/utils/__pycache__/minecraft_utils.cpython-311.pyc
